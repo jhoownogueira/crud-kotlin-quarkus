@@ -6,25 +6,24 @@ import javax.persistence.*
 import javax.validation.constraints.*
 
 @Entity
-data class Tarefa (
+class Tarefa(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
-    @field:NotBlank
-    val titulo: String,
-
-    val descricao: String? = null,
-
-    @field:NotNull
-    val data_inicio: LocalDate,
-
-    @field:NotNull
-    val prazo_conclusao: LocalDate,
-
-    @field:NotNull
-    @Enumerated(EnumType.STRING)
-    val status: StatusTarefa
+    var titulo: String,
+    var descricao: String,
+    var data_inicio: LocalDate,
+    var prazo_conclusao: LocalDate,
+    var status: StatusTarefa
 ) {
-    constructor() : this(null, "", null, LocalDate.now(), LocalDate.now(), StatusTarefa.PENDENTE)
+    constructor() : this(
+        id = null,
+        titulo = "",
+        descricao = "",
+        data_inicio = LocalDate.now(),
+        prazo_conclusao = LocalDate.now().plusDays(1),
+        status = StatusTarefa.PENDENTE
+    )
 }
+

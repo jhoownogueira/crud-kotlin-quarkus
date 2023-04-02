@@ -4,13 +4,15 @@ import puc.dto.TarefaDTO
 import puc.model.Tarefa
 import puc.service.TarefaService
 import javax.inject.Inject
+import javax.transaction.Transactional
+import javax.validation.Valid
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+
 @Path("/tarefas")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 class TarefaResource {
     @Inject
     lateinit var tarefaService: TarefaService
@@ -19,14 +21,19 @@ class TarefaResource {
     fun listarTarefas(): List<Tarefa> = tarefaService.listarTarefas()
 
     @POST
-    fun createTarefa(tarefaDTO: TarefaDTO): Response {
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun createTarefa(@Valid tarefaDTO: TarefaDTO): Response {
+        println("Olá, ${tarefaDTO.titulo}! Bem-vindo ao meu programa.")
         val tarefa = Tarefa(
             titulo = tarefaDTO.titulo,
-            descricao = tarefaDTO.descricao,
-            data_inicio = tarefaDTO.dataInicio,
-            prazo_conclusao = tarefaDTO.prazoConclusao,
+            descricao = tarefaDTO.descricao ?: "",
+            data_inicio = tarefaDTO.data_inicio,
+            prazo_conclusao = tarefaDTO.prazo_conclusao,
             status = tarefaDTO.status
         )
+
+
         tarefaService.criarTarefa(tarefa)
         return Response.status(Response.Status.CREATED).entity(tarefa).build()
     }

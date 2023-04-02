@@ -13,7 +13,6 @@ class TarefaService {
 
     fun listarTarefas(): List<Tarefa> {
         val tarefas = tarefaRepository.listAll()
-        println("Tarefas recuperadas: $tarefas") // Adicione este log
         return tarefas
     }
 
