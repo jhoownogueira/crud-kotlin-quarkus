@@ -24,7 +24,6 @@ class TarefaResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     fun createTarefa(@Valid tarefaDTO: TarefaDTO): Response {
-        println("Olá, ${tarefaDTO.titulo}! Bem-vindo ao meu programa.")
         val tarefa = Tarefa(
             titulo = tarefaDTO.titulo,
             descricao = tarefaDTO.descricao ?: "",
@@ -38,5 +37,27 @@ class TarefaResource {
         return Response.status(Response.Status.CREATED).entity(tarefa).build()
     }
 
-    // Implementar os demais endpoints (editar, excluir, etc.)
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun updateTarefa(@PathParam("id") id: Long, @Valid tarefaDTO: TarefaDTO): Response {
+        val tarefa = tarefaService.atualizarTarefa(id, tarefaDTO)
+        return if (tarefa != null) {
+            Response.ok(tarefa).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).build()
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    fun deleteTarefa(@PathParam("id") id: Long): Response {
+        return if (tarefaService.removerTarefa(id)) {
+            Response.noContent().build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).build()
+        }
+    }
 }
